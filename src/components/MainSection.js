@@ -10,7 +10,12 @@ export function MainSection(props) {
   return (
     <section className="main">
         <input className="toggle-all" type="checkbox" onChange={setToggleAll} />
-        <SetListItems items={props.items} onToggleItem={props.onSingleToggle} onDestroyButton={props.onDestroyButton} setEditingMode={props.setEditingMode}/>
+
+        <SetListItems
+        items={props.items} onToggleItem={props.onSingleToggle} useState={props.useState}
+        onDestroyButton={props.onDestroyButton} setEditingMode={props.setEditingMode}
+        />
+
     </section>
   )
 }

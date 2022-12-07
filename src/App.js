@@ -8,7 +8,7 @@ import {Footer} from "./components/Footer.js"
 
 function App() {
 
-  const [ todos_list, setTodos ] = React.useState([])
+  const [ todos_list, setTodos ] = React.useState([]);
   const [ todos_left, setTodosLeft ] = React.useState(0);
 
 /*   React.useEffect(() => {
@@ -17,38 +17,40 @@ function App() {
         .then(setTodos)
   }, []); */
 
-  // eslint-disable-next-line
+
   React.useEffect(() => {
     let undoneTodos = todos_list.filter(item => item.completed === false);
     setTodosLeft(undoneTodos.length);
-  })
+    console.log('inside useEffect')
+  }, [todos_list]);
 
   // header methods
   const addTodoItem = (title) => {
-    let new_list = todos_list.concat([{id: Date.now(),title: title, completed: false}])
-    setTodos(new_list)
+    let new_list = todos_list.concat([{id: Date.now(),title: title, completed: false}]);
+    setTodos(new_list);
   }
 
   //mainSection methods
-  const SetToggleItem = (event) => {
+  const SetToggleItemConstruct = (item, event) => {
     let listItem = event.target.parentNode.parentNode
-      todos_list.forEach(item => {
-      if (item.id === Number(event.target.value)) {
-        if (item.completed === true){
-          item.completed = false;
-          listItem.className = ''
-        } else {
-          item.completed = true;
-          listItem.className = 'completed'
-        }
+    if (item.id === Number(event.target.value)) {
+      if (item.completed === true){
+        item.completed = false;
+        listItem.className = ''
+      } else {
+        item.completed = true;
+        listItem.className = 'completed';
       }
-    })
-    // update the "todos left" at the footer component
-    let undoneTodos = todos_list.filter(item => item.completed === false);
-    setTodosLeft(undoneTodos.length);
+    }
+    return item;
   }
 
-  const toggleAll = (event) => {
+  const SetToggleItem = (event) => {
+    let new_list =  todos_list.map((item) => SetToggleItemConstruct(item, event));
+    setTodos(new_list);
+  }
+
+  const toggleAllConstructor = (item, event) => {
     let listItem = event.currentTarget.nextSibling.querySelectorAll('li');
     let toggleInput = event.currentTarget.nextSibling.querySelectorAll('.toggle');
     if (event.target.checked) {
@@ -61,7 +63,7 @@ function App() {
       toggleInput.forEach(item => {
         item.checked = true;
       });
-
+      return item;
     } else {
       todos_list.forEach(item => {
         item.completed = false;
@@ -71,22 +73,26 @@ function App() {
       });
       toggleInput.forEach(item => {
         item.checked = false;
-      })
+      });
+      return item;
     }
-    let undoneTodos = todos_list.filter(item => item.completed === false);
-    setTodosLeft(undoneTodos.length);
+  } 
+
+  const toggleAll = (event) => {
+    let new_list = todos_list.map(item => toggleAllConstructor(item,event));
+    setTodos(new_list);    
   }
 
   const destroyTodo = (event) => {
     let new_list = todos_list.filter(item => item.id !== Number(event.target.value));
-    setTodos(new_list)
-    setTodosLeft(new_list.length)
+    setTodos(new_list);
+    setTodosLeft(new_list.length);
   }
 
   const destroyAllDoneTodos = (event) => {
     let new_list = todos_list.filter(item => item.completed !== true);
     setTodos(new_list);
-    setTodosLeft(new_list.length)
+    setTodosLeft(new_list.length);
   }
 
   const setEditingMode = (event) => {
@@ -106,7 +112,7 @@ function App() {
 
         <MainSection 
         items={todos_list} onSingleToggle={SetToggleItem} onToggleAll={toggleAll}
-        onDestroyButton={destroyTodo} setEditingMode={setEditingMode}
+        onDestroyButton={destroyTodo} setEditingMode={setEditingMode} useState={setTodos}
         />
 
         <Footer items={todos_list} todosLeft={todos_left} onDestroyAll={destroyAllDoneTodos}/>

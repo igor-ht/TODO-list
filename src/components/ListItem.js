@@ -2,21 +2,38 @@ export function SetListItems(props) {
 
   function handleEditInput(event) {
     if (event.key === 'Enter') {
-      let label = event.currentTarget.children[0].children[1];
+      let new_list = props.items.map(item => {
+        if (String(item.id) === String(event.currentTarget.id)) {
+          item.title = event.target.value;
+          return item
+        }
+        else {
+          return item
+        }
+      });
       event.currentTarget.className = '';
-      label.innerText = event.target.value;
+      props.useState(new_list);
     }
   }
+
   const editOnBlur = (event) => {
-    let label = event.currentTarget.parentNode.children[0].children[1];
-    label.innerText = event.target.value;
+    let new_list = props.items.map(item => {
+      if (String(item.id) === String(event.target.parentNode.id)) {
+        item.title = event.currentTarget.value;
+        return item;
+      }
+      else {
+        return item;
+      }
+    });
     event.target.parentNode.className = '';
+    props.useState(new_list);
   }
 
   return (
     <ul className="todo-list">
     {props.items.map((item) => (
-      <li key={item.id} onDoubleClick={props.setEditingMode} onKeyDown={handleEditInput}>
+      <li id={item.id} onDoubleClick={props.setEditingMode} onKeyDown={handleEditInput}>
         <div className="view">
           <input className="toggle" type="checkbox" onChange={props.onToggleItem} value={item.id} />
           <label>{item.title}</label>
