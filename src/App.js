@@ -2,8 +2,8 @@ import './App.css';
 import * as React from 'react';
 import {Header} from "./components/Header.js"
 import {MainSection} from "./components/MainSection.js"
+import { SetListItems } from './components/ListItem';
 import {Footer} from "./components/Footer.js"
-
 
 
 function App() {
@@ -11,12 +11,12 @@ function App() {
   const [ todos_list, setTodos ] = React.useState([]);
   const [ todos_left, setTodosLeft ] = React.useState(0);
 
+
 /*   React.useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
         .then( response => response.json())
         .then(setTodos)
   }, []); */
-
 
   React.useEffect(() => {
     let undoneTodos = todos_list.filter(item => item.completed === false);
@@ -51,16 +51,16 @@ function App() {
   }
 
   const toggleAllConstructor = (item, event) => {
-    let listItem = event.currentTarget.nextSibling.querySelectorAll('li');
-    let toggleInput = event.currentTarget.nextSibling.querySelectorAll('.toggle');
+    let allListItems = event.currentTarget.nextSibling.querySelectorAll('li');
+    let allToggleInput = event.currentTarget.nextSibling.querySelectorAll('.toggle');
     if (event.target.checked) {
       todos_list.forEach(item => {
         item.completed = true;
       });
-      listItem.forEach(item => {
+      allListItems.forEach(item => {
         item.className = 'completed';
       });
-      toggleInput.forEach(item => {
+      allToggleInput.forEach(item => {
         item.checked = true;
       });
       return item;
@@ -68,10 +68,10 @@ function App() {
       todos_list.forEach(item => {
         item.completed = false;
       });
-      listItem.forEach(item => {
+      allListItems.forEach(item => {
         item.className = '';
       });
-      toggleInput.forEach(item => {
+      allToggleInput.forEach(item => {
         item.checked = false;
       });
       return item;
@@ -89,7 +89,7 @@ function App() {
     setTodosLeft(new_list.length);
   }
 
-  const destroyAllDoneTodos = (event) => {
+  const destroyAllDoneTodos = () => {
     let new_list = todos_list.filter(item => item.completed !== true);
     setTodos(new_list);
     setTodosLeft(new_list.length);
@@ -97,7 +97,7 @@ function App() {
 
   const setEditingMode = (event) => {
     if (event.target.tagName === 'LABEL') {
-      event.currentTarget.className = 'editing'
+      event.currentTarget.className += ' editing'
       let inputEdit = event.currentTarget.querySelector('.edit');
       inputEdit.focus();
       inputEdit.value = event.target.textContent;
@@ -110,10 +110,14 @@ function App() {
 
         <Header onAddItem={addTodoItem} />
 
-        <MainSection 
-        items={todos_list} onSingleToggle={SetToggleItem} onToggleAll={toggleAll}
-        onDestroyButton={destroyTodo} setEditingMode={setEditingMode} useState={setTodos}
-        />
+        <MainSection items={todos_list} onToggleAll={toggleAll}>
+
+          <SetListItems
+            items={todos_list} onToggleItem={SetToggleItem} useState={setTodos}
+            onDestroyButton={destroyTodo} setEditingMode={setEditingMode}
+            />
+
+        </MainSection>
 
         <Footer items={todos_list} todosLeft={todos_left} onDestroyAll={destroyAllDoneTodos}/>
 
