@@ -1,8 +1,14 @@
+import { useContext } from 'react';
+import ListContext from '../ListContext';
+import { SetListItems } from './ListItem';
 
-export function MainSection(props) {
+
+export function MainSection() {
+
+  const { toggleAll } = useContext(ListContext)
 
   function setToggleAll(event) {
-    props.onToggleAll(event);
+    toggleAll(event);
   }
 
   return (
@@ -10,7 +16,7 @@ export function MainSection(props) {
       
       <input className="toggle-all" type="checkbox" onChange={setToggleAll} />
 
-      {props.children} 
+       <SetListItems></SetListItems>
 
     </section>
   )

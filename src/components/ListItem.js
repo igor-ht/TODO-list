@@ -1,4 +1,9 @@
-export function SetListItems(props) {
+import ListContext from "../ListContext";
+import { useContext } from "react";
+
+
+export function SetListItems() {
+  const { todos_list, setTodos, setEditingMode, SetToggleItem, destroyTodo  } = useContext(ListContext);
 
   function handleEditInput(event) {
     if (event.key === 'Enter') {
@@ -7,7 +12,7 @@ export function SetListItems(props) {
   }
 
   const editOnBlur = (event) => {
-    let new_list = props.items.map(item => {
+    let new_list = todos_list.map(item => {
       if (String(item.id) === String(event.target.parentNode.id)) {
         item.title = event.currentTarget.value;
         return item;
@@ -17,17 +22,17 @@ export function SetListItems(props) {
       }
     });
     event.target.parentNode.className = event.target.parentNode.className.replace('editing', '');
-    props.useState(new_list);
+    setTodos(new_list);
   }
 
   return (
     <ul className="todo-list">
-    {props.items.map((item) => (
-      <li key={item.id} id={item.id} onDoubleClick={props.setEditingMode} onKeyDown={handleEditInput}>
+    {todos_list.map((item) => (
+      <li key={item.id} id={item.id} onDoubleClick={setEditingMode} onKeyDown={handleEditInput}>
         <div className="view">
-          <input className="toggle" type="checkbox" onChange={props.onToggleItem} value={item.id} />
+          <input className="toggle" type="checkbox" onChange={SetToggleItem} value={item.id} />
           <label>{item.title}</label>
-          <button className="destroy" onClick={props.onDestroyButton} value={item.id}/>
+          <button className="destroy" onClick={destroyTodo} value={item.id}/>
         </div>
         <input className="edit" onBlur={editOnBlur}/>
       </li>

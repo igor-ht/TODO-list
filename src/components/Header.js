@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import ListContext from '../ListContext';
 
-export function Header(props) {
 
+export function Header() {
+  
+  const { addTodoItem } = useContext(ListContext);
+  
   function handleInputKey(event){
     if (event.key === 'Enter') {
-      props.onAddItem(event.target.value);
+      addTodoItem(event.target.value);
       event.target.value = '';
     }
   }
