@@ -1,16 +1,19 @@
-import './App.css';
-import * as React from 'react';
-import './ListContext.js';
-import TodosApp from './components/TodosApp';
-
+import { HomePage } from './Pages/Home';
+import { Outlet } from 'react-router-dom';
+import ListContext from './Context/ListContext';
+import useTodos from './TodosApi';
 
 function App() {
+  
+  const todoApi = useTodos();
 
   return (
-    <div>
-      <TodosApp>
-      </TodosApp>
-    </div>
+    <>
+      <HomePage/>
+      <ListContext.Provider value={todoApi}>
+        <Outlet/>
+      </ListContext.Provider>
+    </>
   )
 }
 

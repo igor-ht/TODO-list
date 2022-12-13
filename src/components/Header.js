@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import ListContext from '../ListContext';
+import ListContext from '../Context/ListContext';
 
 
 export function Header() {
   
-  const { addTodoItem } = useContext(ListContext);
+  const { todos_list, addTodoItem } = useContext(ListContext);
   
   function handleInputKey(event){
     if (event.key === 'Enter') {
@@ -15,7 +15,7 @@ export function Header() {
   
   return ( 
     <header className="header">
-      <h1>To Do </h1>
+      <h1>{todos_list.title}</h1>
       <input className="new-todo" placeholder="What needs to be done?" autoFocus onKeyUp={handleInputKey} />
     </header>
    )
